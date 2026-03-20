@@ -1,60 +1,74 @@
-# PINN Solution of 2D Lid Driven Cavity Flow
+# Physics Informed Neural Network (PINN) for 2D Lid Driven Cavity Flow
 
-## Overview
+## Project Overview
 
-This project solves the 2D incompressible Navier–Stokes equations using a Physics Informed Neural Network (PINN).
+This project implements a **Physics Informed Neural Network (PINN)** to solve the 2D incompressible Navier–Stokes equations for the classical lid-driven cavity flow problem.
 
-The neural network predicts:
+Instead of relying on traditional CFD discretization methods (FEM/FVM/FDM), the neural network learns the solution by minimizing the governing physics equations directly.
 
-• Velocity components (u,v)  
-• Pressure field (p)
+The model predicts:
 
-The governing equations enforced are:
+• u velocity component  
+• v velocity component  
+• Pressure field  
 
-Continuity:
-du/dx + dv/dy = 0
+---
 
-Momentum equations:
+## Governing Equations
 
-u du/dx + v du/dy = − dp/dx + (1/Re)∇²u
+### Continuity equation
 
-u dv/dx + v dv/dy = − dp/dy + (1/Re)∇²v
+∂u/∂x + ∂v/∂y = 0
+
+### Momentum equations
+
+u∂u/∂x + v∂u/∂y = −∂p/∂x + (1/Re)(∂²u/∂x² + ∂²u/∂y²)
+
+u∂v/∂x + v∂v/∂y = −∂p/∂y + (1/Re)(∂²v/∂x² + ∂²v/∂y²)
 
 Reynolds number used:
+
 Re = 100
 
-## Boundary conditions
+---
 
-Top lid:
-u = 1
-v = 0
+## Boundary Conditions
+
+Top wall (moving lid):
+
+u = 1  
+v = 0  
 
 Other walls:
-u = 0
-v = 0
 
-## Neural Network
+u = 0  
+v = 0  
 
-Architecture:
+---
 
-Input: (x,y)
+## Neural Network Architecture
+
+Input layer:
+(x,y)
 
 Hidden layers:
-3 layers × 50 neurons
+3 hidden layers with 50 neurons each
 
-Activation:
+Activation function:
 Tanh
 
-Output:
+Output layer:
 (u,v,p)
 
-## Training details
+---
+
+## Training Details
 
 Physics collocation points:
 10000
 
 Boundary points:
-2000 per wall
+2000 per boundary
 
 Optimizer:
 Adam
@@ -62,29 +76,73 @@ Adam
 Learning rate:
 0.001
 
-Epochs:
+Training epochs:
 5000
+
+Loss function:
+
+Loss = Physics Loss + Boundary Loss
+
+Physics loss enforces:
+
+• Continuity equation  
+• X-momentum equation  
+• Y-momentum equation  
+
+---
 
 ## Results
 
-The model produces:
+### Velocity Field (Streamlines + Vector field)
 
-• Velocity vector field  
-• Streamlines  
-• Pressure contours  
+![Velocity Field](velocity_field.png)
 
-## How to run
+The velocity field shows the expected primary vortex structure typical of lid-driven cavity flow at Re = 100.
+
+---
+
+### Pressure Field
+
+![Pressure Field](pressure_field.png)
+
+The pressure contour shows the pressure gradient induced by the moving lid and internal circulation.
+
+---
+
+## How to Run
 
 Install dependencies:
+pip install -r requirements.txt
 
-pip install torch numpy matplotlib
 
-Run:
-
+Run simulation:
 python cavity_flow.py
+
+
+---
+
+## Future Improvements
+
+Possible extensions of this work:
+
+• Higher Reynolds number simulations  
+• Loss convergence plots  
+• Vorticity visualization  
+• L-BFGS optimizer refinement  
+• Comparison with benchmark CFD data  
+• Transient Navier–Stokes extension  
+• 3D cavity flow  
+
+---
 
 ## Author
 
 Manya Johari  
+
 Aerospace Engineering Student  
-Interested in CFD, PINNs and computational physics
+
+Interests:
+Physics Informed Neural Networks  
+Computational Fluid Dynamics  
+Computational Physics  
+Scientific Machine Learning
